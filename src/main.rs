@@ -1,6 +1,7 @@
 mod config;
-//mod enigma;
+mod enigma;
 
 fn main() {
     println!("{:?}", config::load_config());
+    println!("{}", enigma::keyboard::forward('F'));
 }

@@ -1,1 +1,1 @@
-mod keyboard;
+pub(crate) mod keyboard;

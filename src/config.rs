@@ -5,14 +5,14 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
-    misc: Misc,
-    reflectors: Reflectors,
-    rotors: Rotors,
-    notches: Notches,
+    pub misc: Misc,
+    pub reflectors: Reflectors,
+    pub rotors: Rotors,
+    pub notches: Notches,
 }
 #[derive(Debug, Deserialize)]
-struct Misc {
-    alphabet: String,
+pub struct Misc {
+    pub alphabet: String,
 }
 
 #[derive(Debug, Deserialize)]
