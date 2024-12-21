@@ -15,6 +15,7 @@ impl Rotor {
         todo!("implement rotor rotation");
     }
 
+    /// Returns the position of the letter
     pub fn forward(&self, letter: char) -> i32 {
         let wiring = &self.wiring;
         wiring.find(letter).unwrap().try_into().unwrap()
