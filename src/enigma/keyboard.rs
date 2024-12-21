@@ -11,7 +11,9 @@ pub fn forward(letter: char) -> i32 {
 
 /// Returns the letters at the specified position
 pub fn backward(signal: i32) -> char {
-    'a'
+    let config = load_config();
+    let alphabet = config.misc.alphabet;
+    alphabet.chars().nth(signal.try_into().unwrap()).unwrap()
 }
 
 #[cfg(test)]
@@ -24,5 +26,13 @@ mod tests {
         assert_eq!(result, 3);
         let result = forward('J');
         assert_eq!(result, 9);
+    }
+
+    #[test]
+    fn test_backward() {
+        let result = backward(3);
+        assert_eq!(result, 'D');
+        let result = backward(9);
+        assert_eq!(result, 'J');
     }
 }
