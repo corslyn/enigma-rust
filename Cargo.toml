@@ -2,6 +2,8 @@
 name = "enigma-rust"
 version = "0.1.0"
 edition = "2021"
+authors = ["corslyn"]
+description = "An implementation of the Enigma Machine in Rust"
 
 [dependencies]
 serde = { version = "1.0.216", features = ["derive"] }
