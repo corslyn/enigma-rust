@@ -1,5 +1,3 @@
-use std::fs;
-
 use crate::config::load_config;
 
 /// Returns the position of the letter

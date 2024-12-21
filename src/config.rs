@@ -1,7 +1,5 @@
-use std::fs;
-use std::path::Path;
-
 use serde::Deserialize;
+use std::fs;
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
@@ -16,28 +14,28 @@ pub struct Misc {
 }
 
 #[derive(Debug, Deserialize)]
-struct Reflectors {
-    A: String,
-    B: String,
-    C: String,
+pub struct Reflectors {
+    pub A: String,
+    pub B: String,
+    pub C: String,
 }
 
 #[derive(Debug, Deserialize)]
-struct Rotors {
-    I: String,
-    II: String,
-    III: String,
-    IV: String,
-    V: String,
+pub struct Rotors {
+    pub I: String,
+    pub II: String,
+    pub III: String,
+    pub IV: String,
+    pub V: String,
 }
 
 #[derive(Debug, Deserialize)]
-struct Notches {
-    I: String,
-    II: String,
-    III: String,
-    IV: String,
-    V: String,
+pub struct Notches {
+    pub I: String,
+    pub II: String,
+    pub III: String,
+    pub IV: String,
+    pub V: String,
 }
 
 pub fn load_config() -> Config {
