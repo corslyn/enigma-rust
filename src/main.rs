@@ -1,3 +1,6 @@
+mod config;
+//mod enigma;
+
 fn main() {
-    println!("Hello, world!");
+    println!("{:?}", config::load_config());
 }
