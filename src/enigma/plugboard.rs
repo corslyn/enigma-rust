@@ -1,23 +1,25 @@
 use crate::config::load_config;
 
+#[derive(Debug)]
 pub struct Plugboard {
     pub pairs: Vec<(char, char)>,
     pub modified_alphabet: String,
+    pub alphabet: String,
 }
 
 impl Plugboard {
     pub fn new(pairs: Vec<(char, char)>) -> Plugboard {
-        let modified_alphabet = Plugboard::swap(pairs.clone());
+        let alphabet = load_config().misc.alphabet.clone();
+        let modified_alphabet = Plugboard::swap(alphabet.clone(), pairs.clone());
         Plugboard {
+            alphabet,
             pairs,
             modified_alphabet,
         }
     }
 
-    pub fn swap(pairs: Vec<(char, char)>) -> String {
-        let config = load_config();
-        let alphabet = config.misc.alphabet;
-        let mut modified_alphabet = alphabet.clone();
+    pub fn swap(alphabet: String, pairs: Vec<(char, char)>) -> String {
+        let mut modified_alphabet = alphabet;
         for pair in pairs {
             let a = pair.0;
             let b = pair.1;
@@ -26,22 +28,33 @@ impl Plugboard {
             modified_alphabet = modified_alphabet.replace(b, &a.to_string());
             modified_alphabet = modified_alphabet.replace("#", &b.to_string());
         }
-        modified_alphabet
+        modified_alphabet.to_owned()
     }
 
-    /// Returns the position of the letter
-    pub fn forward(&self, letter: char) -> i32 {
-        let letters = &self.modified_alphabet;
-        letters.find(letter).unwrap().try_into().unwrap()
+    /// Returns the modified signal (keyboard to plugboard)
+    pub fn forward(&self, signal: i32) -> i32 {
+        let letter = self
+            .alphabet
+            .chars()
+            .nth(signal.try_into().unwrap())
+            .unwrap();
+        self.modified_alphabet
+            .find(letter)
+            .unwrap()
+            .try_into()
+            .unwrap()
     }
 
-    /// Returns the letters at the specified position
-    pub fn backward(&self, signal: i32) -> char {
-        let letters = &self.modified_alphabet;
-        letters.chars().nth(signal.try_into().unwrap()).unwrap()
+    /// Returns the modified signal (plugboard to keyboard)
+    pub fn backward(&self, signal: i32) -> i32 {
+        let letter = self
+            .modified_alphabet
+            .chars()
+            .nth(signal.try_into().unwrap())
+            .unwrap();
+        return self.alphabet.find(letter).unwrap().try_into().unwrap();
     }
 }
-/// Returns the alphabet with letters swapped
 
 #[cfg(test)]
 mod tests {
@@ -49,20 +62,21 @@ mod tests {
 
     #[test]
     fn test_swap() {
-        let result = Plugboard::swap(vec![('A', 'F'), ('U', 'J')]);
+        let config = load_config();
+        let alphabet = config.misc.alphabet;
+        let result = Plugboard::swap(alphabet.clone(), vec![('A', 'F'), ('U', 'J')]);
         assert_eq!(result, "FBCDEAGHIUKLMNOPQRSTJVWXYZ");
-        let result = Plugboard::swap(vec![]);
+        let result = Plugboard::swap(alphabet.clone(), vec![]);
         assert_eq!(result, "ABCDEFGHIJKLMNOPQRSTUVWXYZ");
     }
 
     #[test]
     fn test_forward_backward() {
         let plugboard = Plugboard::new(vec![('A', 'F'), ('U', 'J')]);
-        assert_eq!(plugboard.forward('A'), 5);
-        assert_eq!(plugboard.forward('F'), 0);
-        assert_eq!(plugboard.backward(5), 'A');
-        assert_eq!(plugboard.backward(0), 'F');
-        assert_eq!(plugboard.forward('H'), 7);
-        assert_eq!(plugboard.backward(7), 'H');
+
+        assert_eq!(plugboard.forward(0), 5);
+        assert_eq!(plugboard.backward(5), 0);
+        assert_eq!(plugboard.forward(7), 7);
+        assert_eq!(plugboard.backward(7), 7);
     }
 }

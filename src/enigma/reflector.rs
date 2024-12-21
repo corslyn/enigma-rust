@@ -1,3 +1,5 @@
+use crate::config::load_config;
+
 #[derive(Debug)]
 pub struct Reflector {
     wiring: String,
@@ -9,16 +11,18 @@ impl Reflector {
         Reflector { wiring }
     }
 
-    /// Returns the position of the letter
+    /* /// Returns the position of the letter
     pub fn forward(&self, letter: char) -> i32 {
         let wiring = &self.wiring;
         wiring.find(letter).unwrap().try_into().unwrap()
-    }
+    } */
 
-    /// Returns the letters at the specified position
-    pub fn backward(&self, signal: i32) -> char {
-        let wiring = &self.wiring;
-        wiring.chars().nth(signal.try_into().unwrap()).unwrap()
+    /// Returns the modified signal
+    pub fn reflect(&self, signal: i32) -> i32 {
+        let config = load_config();
+        let alphabet = config.misc.alphabet;
+        let letter = alphabet.chars().nth(signal.try_into().unwrap()).unwrap();
+        self.wiring.find(letter).unwrap().try_into().unwrap()
     }
 }
 
@@ -28,24 +32,13 @@ mod tests {
     use crate::config::load_config;
 
     #[test]
-    fn test_forward() {
+    fn test_reflect() {
         let config = load_config();
         let reflector_a_wiring = config.reflectors.A;
         let reflector_a = Reflector::new(reflector_a_wiring);
-        let result = Reflector::forward(&reflector_a, 'H');
+        let result = Reflector::reflect(&reflector_a, 7);
         assert_eq!(result, 23);
-        let result = Reflector::forward(&reflector_a, 'Y');
+        let result = Reflector::reflect(&reflector_a, 24);
         assert_eq!(result, 6);
-    }
-
-    #[test]
-    fn test_backward() {
-        let config = load_config();
-        let reflector_a_wiring = config.reflectors.A;
-        let reflector_a = Reflector::new(reflector_a_wiring);
-        let result = Reflector::backward(&reflector_a, 23);
-        assert_eq!(result, 'H');
-        let result = Reflector::backward(&reflector_a, 6);
-        assert_eq!(result, 'Y');
     }
 }
