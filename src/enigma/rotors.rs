@@ -45,19 +45,19 @@ mod tests {
         let rotor_iii_wiring = config.rotors.III;
         let notch_iii = config.notches.III;
         let rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
-        let result = Rotor::forward(&rotor_iii, 17);
-        assert_eq!(result, 20);
+        let result = Rotor::forward(&rotor_iii, 0);
+        assert_eq!(result, 1);
     }
 
     #[test]
     fn test_backward() {
         let config = load_config();
-        let rotor_i_wiring = config.rotors.I;
-        let notch_i = config.notches.I;
-        let rotor_i = Rotor::new(rotor_i_wiring, notch_i);
-        let result = Rotor::backward(&rotor_i, 20);
+        let rotor_iii_wiring = config.rotors.III;
+        let notch_iii = config.notches.III;
+        let rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
+        let result = Rotor::backward(&rotor_iii, 1);
         assert_eq!(result, 0);
-        let result = Rotor::backward(&rotor_i, 9);
-        assert_eq!(result, 25);
+        let result = Rotor::backward(&rotor_iii, 25);
+        assert_eq!(result, 12);
     }
 }
