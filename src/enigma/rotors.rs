@@ -12,9 +12,13 @@ impl Rotor {
         Rotor { wiring, notch }
     }
 
-    /// Steps the rotor by one
-    pub fn step(self) -> String {
-        todo!("implement rotor rotation");
+    /// Steps the rotor by n, defaults to 1
+    pub fn step(&mut self, n: Option<i32>) {
+        let steps = n.unwrap_or(1);
+        for _ in 0..steps {
+            self.wiring =
+                self.wiring[1..].to_string() + &self.wiring.chars().nth(0).unwrap().to_string();
+        }
     }
 
     /// Returns the modified signal (rotors to reflector)
@@ -59,5 +63,18 @@ mod tests {
         assert_eq!(result, 0);
         let result = Rotor::backward(&rotor_iii, 25);
         assert_eq!(result, 12);
+    }
+
+    #[test]
+    fn test_stepping() {
+        let config = load_config();
+        let rotor_iii_wiring = config.rotors.III;
+        let notch_iii = config.notches.III;
+        let mut rotor_iii = Rotor::new(rotor_iii_wiring.clone(), notch_iii.clone());
+        rotor_iii.step(None);
+        assert_eq!("DFHJLCPRTXVZNYEIWGAKMUSQOB", &rotor_iii.wiring);
+        rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
+        rotor_iii.step(Some(10));
+        assert_eq!("XVZNYEIWGAKMUSQOBDFHJLCPRT", &rotor_iii.wiring);
     }
 }
