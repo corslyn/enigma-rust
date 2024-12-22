@@ -64,14 +64,14 @@ mod tests {
     #[test]
     fn test_encoding() {
         let config = load_config();
-        let rotor1 = Rotor::new(config.rotors.I, config.notches.I);
-        let rotor2 = Rotor::new(config.rotors.II, config.notches.II);
-        let rotor3 = Rotor::new(config.rotors.III, config.notches.III);
-        let reflector = Reflector::new(config.reflectors.A);
+        let rotorL = Rotor::new(config.rotors.I, config.notches.I);
+        let rotorC = Rotor::new(config.rotors.II, config.notches.II);
+        let rotorR = Rotor::new(config.rotors.III, config.notches.III);
+        let reflector = Reflector::new(config.reflectors.B);
         let plugboard = Plugboard::new(vec![('A', 'R'), ('G', 'K'), ('O', 'X')]);
-        let mut enigma = Enigma::new(rotor1, rotor2, rotor3, reflector, plugboard);
-        let result = enigma.encode("A".to_string());
+        let mut enigma = Enigma::new(rotorL, rotorC, rotorR, reflector, plugboard);
+        let result = enigma.encode("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".to_string());
 
-        assert_eq!(result, "N");
+        assert_eq!(result, "VCOUETNTDOVLIMKFPXSVPQGKXJSOHMCJEBLIM");
     }
 }

@@ -21,7 +21,7 @@ impl Rotor {
         }
     }
 
-    /// Steps the rotor by 1
+    /// Steps the rotor by n
     pub fn step(&mut self, n: Option<i32>) {
         let steps = n.unwrap_or(1);
 
@@ -40,6 +40,10 @@ impl Rotor {
                 if let Some(first_w) = chars_w.next() {
                     self.wiring = chars_w.collect::<String>() + &first_w.to_string();
                 }
+            }
+
+            if self.wiring.chars().next() == self.notch.chars().next() {
+                todo!("Implement next rotor stepping")
             }
         }
     }
