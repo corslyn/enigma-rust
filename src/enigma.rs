@@ -8,25 +8,25 @@ pub(crate) mod reflector;
 pub(crate) mod rotors;
 
 pub struct Enigma {
-    rotor1: Rotor,
-    rotor2: Rotor,
-    rotor3: Rotor,
+    rotorL: Rotor,
+    rotorC: Rotor,
+    rotorR: Rotor,
     reflector: Reflector,
     plugboard: Plugboard,
 }
 
 impl Enigma {
     pub fn new(
-        rotor1: Rotor,
-        rotor2: Rotor,
-        rotor3: Rotor,
+        rotorL: Rotor,
+        rotorC: Rotor,
+        rotorR: Rotor,
         reflector: Reflector,
         plugboard: Plugboard,
     ) -> Enigma {
         Enigma {
-            rotor1,
-            rotor2,
-            rotor3,
+            rotorL,
+            rotorC,
+            rotorR,
             reflector,
             plugboard,
         }
@@ -37,21 +37,32 @@ impl Enigma {
         let mut encoded = vec![];
 
         for character in chars {
+            self.step_rotors();
+
             let mut signal = keyboard::forward(character);
-            self.rotor3.step(None);
             signal = self.plugboard.forward(signal);
-            signal = self.rotor3.forward(signal);
-            signal = self.rotor2.forward(signal);
-            signal = self.rotor1.forward(signal);
+            signal = self.rotorR.forward(signal);
+            signal = self.rotorC.forward(signal);
+            signal = self.rotorL.forward(signal);
             signal = self.reflector.reflect(signal);
-            signal = self.rotor1.backward(signal);
-            signal = self.rotor2.backward(signal);
-            signal = self.rotor3.backward(signal);
+            signal = self.rotorL.backward(signal);
+            signal = self.rotorC.backward(signal);
+            signal = self.rotorR.backward(signal);
             signal = self.plugboard.backward(signal);
             let letter = keyboard::backward(signal);
             encoded.push(letter);
         }
         String::from_iter(encoded.iter())
+    }
+
+    pub fn step_rotors(&mut self) {
+        if self.rotorC.is_at_notch() {
+            self.rotorC.step(None);
+            self.rotorL.step(None);
+        } else if self.rotorR.is_at_notch() {
+            self.rotorC.step(None);
+        }
+        self.rotorR.step(None);
     }
 }
 
@@ -70,8 +81,7 @@ mod tests {
         let reflector = Reflector::new(config.reflectors.B);
         let plugboard = Plugboard::new(vec![('A', 'R'), ('G', 'K'), ('O', 'X')]);
         let mut enigma = Enigma::new(rotorL, rotorC, rotorR, reflector, plugboard);
-        let result = enigma.encode("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA".to_string());
-
-        assert_eq!(result, "VCOUETNTDOVLIMKFPXSVPQGKXJSOHMCJEBLIM");
+        let result = enigma.encode("BONJOURXJEXSUISXNICOLASXSARKOZYXETXJXAIXLEXGRANDXPLAISIRXDEXLIREXLEXTEMPSXDESXTEMPETESXPOURXAUDIBLE".to_string());
+        assert_eq!(result, "RSXZTPCQICLRVQEVMTVUXQLRNJYTEHSTAKBSVUGUYUOEUBEXTFVGFHMGRWBIATBSFFYCEUDJWREHRRIYOSHGTEAXWEIPCLZCCTR");
     }
 }

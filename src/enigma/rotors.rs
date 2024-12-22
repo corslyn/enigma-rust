@@ -1,64 +1,64 @@
 use crate::config::load_config;
 
-use super::keyboard;
-
 #[derive(Debug, Clone)]
 pub struct Rotor {
     wiring: String,
+    input: String,
     notch: String,
-    alphabet: String,
 }
 
 impl Rotor {
     /// Creates a new rotor with a wiring and step notch
     pub fn new(wiring: String, notch: String) -> Rotor {
         let config = load_config();
-        let alphabet = config.misc.alphabet;
+        let input = config.misc.alphabet;
         Rotor {
             wiring,
+            input,
             notch,
-            alphabet,
         }
     }
 
-    /// Steps the rotor by n
-    pub fn step(&mut self, n: Option<i32>) {
-        let steps = n.unwrap_or(1);
+    /// Steps the rotor by n or by 1 if none provided
+    pub fn step(&mut self, mut next_rotor: Option<&mut Rotor>) {
+        // Rotate the current rotor
+        Rotor::rotate_string(&mut self.input);
+        Rotor::rotate_string(&mut self.wiring);
 
-        for _ in 0..steps {
-            // Rotate `alphabet`
-            if !self.alphabet.is_empty() {
-                let mut chars_a = self.alphabet.chars();
-                if let Some(first_a) = chars_a.next() {
-                    self.alphabet = chars_a.collect::<String>() + &first_a.to_string();
-                }
+        // Check if this rotor is at its notch
+        if self.is_at_notch() {
+            if let Some(ref mut next) = next_rotor {
+                // Step the next rotor if this rotor is at the notch
+                next.step(None);
             }
+        }
+    }
 
-            // Rotate `wiring`
-            if !self.wiring.is_empty() {
-                let mut chars_w = self.wiring.chars();
-                if let Some(first_w) = chars_w.next() {
-                    self.wiring = chars_w.collect::<String>() + &first_w.to_string();
-                }
-            }
+    /// Checks if the rotor is at the notch
+    pub fn is_at_notch(&self) -> bool {
+        self.input.starts_with(&self.notch)
+    }
 
-            if self.wiring.chars().next() == self.notch.chars().next() {
-                todo!("Implement next rotor stepping")
-            }
+    /// Rotates the string given
+    fn rotate_string(s: &mut String) {
+        if let Some(first) = s.chars().next() {
+            let mut chars = s.chars();
+            chars.next();
+            *s = chars.collect::<String>() + &first.to_string();
         }
     }
 
     /// Returns the modified signal (rotors to reflector)
     pub fn forward(&self, signal: i32) -> i32 {
-        let alphabet = &self.alphabet;
+        let input = &self.input;
         let letter = self.wiring.chars().nth(signal.try_into().unwrap()).unwrap();
-        alphabet.find(letter).unwrap().try_into().unwrap()
+        input.find(letter).unwrap().try_into().unwrap()
     }
 
     /// Returns the modified signal (reflector to rotors)
     pub fn backward(&self, signal: i32) -> i32 {
-        let alphabet = &self.alphabet;
-        let letter = alphabet.chars().nth(signal.try_into().unwrap()).unwrap();
+        let input = &self.input;
+        let letter = input.chars().nth(signal.try_into().unwrap()).unwrap();
         self.wiring.find(letter).unwrap().try_into().unwrap()
     }
 }
@@ -96,7 +96,7 @@ mod tests {
         let rotor_iii_wiring = config.rotors.III;
         let notch_iii = config.notches.III;
         let mut rotor_iii = Rotor::new(rotor_iii_wiring.clone(), notch_iii.clone());
-        rotor_iii.step(Some(2));
-        assert_eq!("FHJLCPRTXVZNYEIWGAKMUSQOBD", &rotor_iii.wiring);
+        rotor_iii.step(None);
+        assert_eq!("DFHJLCPRTXVZNYEIWGAKMUSQOB", &rotor_iii.wiring);
     }
 }
