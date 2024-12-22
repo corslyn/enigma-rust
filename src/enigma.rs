@@ -2,8 +2,6 @@ use plugboard::Plugboard;
 use reflector::Reflector;
 use rotors::Rotor;
 
-use crate::config::load_config;
-
 pub(crate) mod keyboard;
 pub(crate) mod plugboard;
 pub(crate) mod reflector;
