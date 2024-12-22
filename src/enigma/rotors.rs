@@ -1,5 +1,7 @@
 use crate::config::load_config;
 
+use super::keyboard;
+
 #[derive(Debug)]
 pub struct Rotor {
     wiring: String,
@@ -12,9 +14,19 @@ impl Rotor {
         Rotor { wiring, notch }
     }
 
-    /// Steps the rotor by one
-    pub fn step(self) -> String {
-        todo!("implement rotor rotation");
+    /// Steps the rotor by 1
+    pub fn step(&mut self, next_rotor: Option<&mut Rotor>) {
+        let (first, rest) = self.wiring.split_at(1);
+        self.wiring = format!("{}{}", rest, first);
+
+        //check if next rotor needs to step
+        if keyboard::forward(self.notch.chars().nth(0).unwrap())
+            == keyboard::forward(self.wiring.chars().nth(0).unwrap())
+        {
+            if let Some(next) = next_rotor {
+                next.step(None); //steps next rotor
+            }
+        }
     }
 
     /// Returns the modified signal (rotors to reflector)
@@ -45,19 +57,29 @@ mod tests {
         let rotor_iii_wiring = config.rotors.III;
         let notch_iii = config.notches.III;
         let rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
-        let result = Rotor::forward(&rotor_iii, 17);
-        assert_eq!(result, 20);
+        let result = Rotor::forward(&rotor_iii, 0);
+        assert_eq!(result, 1);
     }
 
     #[test]
     fn test_backward() {
         let config = load_config();
-        let rotor_i_wiring = config.rotors.I;
-        let notch_i = config.notches.I;
-        let rotor_i = Rotor::new(rotor_i_wiring, notch_i);
-        let result = Rotor::backward(&rotor_i, 20);
+        let rotor_iii_wiring = config.rotors.III;
+        let notch_iii = config.notches.III;
+        let rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
+        let result = Rotor::backward(&rotor_iii, 1);
         assert_eq!(result, 0);
-        let result = Rotor::backward(&rotor_i, 9);
-        assert_eq!(result, 25);
+        let result = Rotor::backward(&rotor_iii, 25);
+        assert_eq!(result, 12);
+    }
+
+    #[test]
+    fn test_stepping() {
+        let config = load_config();
+        let rotor_iii_wiring = config.rotors.III;
+        let notch_iii = config.notches.III;
+        let mut rotor_iii = Rotor::new(rotor_iii_wiring.clone(), notch_iii.clone());
+        rotor_iii.step(None);
+        assert_eq!("DFHJLCPRTXVZNYEIWGAKMUSQOB", &rotor_iii.wiring);
     }
 }
