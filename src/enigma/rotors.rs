@@ -20,17 +20,21 @@ impl Rotor {
     }
 
     /// Steps the rotor by n or by 1 if none provided
-    pub fn step(&mut self, mut next_rotor: Option<&mut Rotor>) {
-        // Rotate the current rotor
-        Rotor::rotate_string(&mut self.input);
-        Rotor::rotate_string(&mut self.wiring);
+    pub fn step(&mut self, n: Option<i32>) {
+        let steps = n.unwrap_or(1);
 
-        // Check if this rotor is at its notch
-        if self.is_at_notch() {
-            if let Some(ref mut next) = next_rotor {
-                // Step the next rotor if this rotor is at the notch
-                next.step(None);
-            }
+        for _ in 0..steps {
+            // Rotate the current rotor
+            Rotor::rotate_string(&mut self.input);
+            Rotor::rotate_string(&mut self.wiring);
+            /*
+            // Check if this rotor is at its notch
+            if self.is_at_notch() {
+                if let Some(ref mut next) = next_rotor {
+                    // Step the next rotor if this rotor is at the notch
+                    next.step(None, None);
+                }
+            } */
         }
     }
 
@@ -60,6 +64,10 @@ impl Rotor {
         let input = &self.input;
         let letter = input.chars().nth(signal.try_into().unwrap()).unwrap();
         self.wiring.find(letter).unwrap().try_into().unwrap()
+    }
+
+    pub fn set_position(&mut self, letter: char) {
+        self.step(Some(self.input.find(letter).unwrap().try_into().unwrap()));
     }
 }
 
