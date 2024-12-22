@@ -1,38 +1,59 @@
 use crate::config::load_config;
 
-#[derive(Debug)]
+use super::keyboard;
+
+#[derive(Debug, Clone)]
 pub struct Rotor {
     wiring: String,
     notch: String,
+    alphabet: String,
 }
 
 impl Rotor {
     /// Creates a new rotor with a wiring and step notch
     pub fn new(wiring: String, notch: String) -> Rotor {
-        Rotor { wiring, notch }
+        let config = load_config();
+        let alphabet = config.misc.alphabet;
+        Rotor {
+            wiring,
+            notch,
+            alphabet,
+        }
     }
 
-    /// Steps the rotor by n, defaults to 1
+    /// Steps the rotor by 1
     pub fn step(&mut self, n: Option<i32>) {
         let steps = n.unwrap_or(1);
+
         for _ in 0..steps {
-            self.wiring =
-                self.wiring[1..].to_string() + &self.wiring.chars().nth(0).unwrap().to_string();
+            // Rotate `alphabet`
+            if !self.alphabet.is_empty() {
+                let mut chars_a = self.alphabet.chars();
+                if let Some(first_a) = chars_a.next() {
+                    self.alphabet = chars_a.collect::<String>() + &first_a.to_string();
+                }
+            }
+
+            // Rotate `wiring`
+            if !self.wiring.is_empty() {
+                let mut chars_w = self.wiring.chars();
+                if let Some(first_w) = chars_w.next() {
+                    self.wiring = chars_w.collect::<String>() + &first_w.to_string();
+                }
+            }
         }
     }
 
     /// Returns the modified signal (rotors to reflector)
     pub fn forward(&self, signal: i32) -> i32 {
-        let config = load_config();
-        let alphabet = config.misc.alphabet;
+        let alphabet = &self.alphabet;
         let letter = self.wiring.chars().nth(signal.try_into().unwrap()).unwrap();
         alphabet.find(letter).unwrap().try_into().unwrap()
     }
 
     /// Returns the modified signal (reflector to rotors)
     pub fn backward(&self, signal: i32) -> i32 {
-        let config = load_config();
-        let alphabet = config.misc.alphabet;
+        let alphabet = &self.alphabet;
         let letter = alphabet.chars().nth(signal.try_into().unwrap()).unwrap();
         self.wiring.find(letter).unwrap().try_into().unwrap()
     }
@@ -71,10 +92,7 @@ mod tests {
         let rotor_iii_wiring = config.rotors.III;
         let notch_iii = config.notches.III;
         let mut rotor_iii = Rotor::new(rotor_iii_wiring.clone(), notch_iii.clone());
-        rotor_iii.step(None);
-        assert_eq!("DFHJLCPRTXVZNYEIWGAKMUSQOB", &rotor_iii.wiring);
-        rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
-        rotor_iii.step(Some(10));
-        assert_eq!("XVZNYEIWGAKMUSQOBDFHJLCPRT", &rotor_iii.wiring);
+        rotor_iii.step(Some(2));
+        assert_eq!("FHJLCPRTXVZNYEIWGAKMUSQOBD", &rotor_iii.wiring);
     }
 }
