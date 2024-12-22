@@ -2,6 +2,8 @@ use plugboard::Plugboard;
 use reflector::Reflector;
 use rotors::Rotor;
 
+use crate::config::load_config;
+
 pub(crate) mod keyboard;
 pub(crate) mod plugboard;
 pub(crate) mod reflector;
@@ -67,7 +69,11 @@ impl Enigma {
         self.rotorR.step(None);
     }
 
-    /// Takes a 3 letter key as an argument and shifts the rotors to the associated letter
+    #[doc = "Takes a 3 letter key as an argument and shifts the rotors to the associated letter\n
+     ex: key = ABC
+     rL_out : ABCDEF...
+     rC_out : BCDEFG...
+     rR_out : CDEFGH..."]
     pub fn set_start_position(&mut self, key: String) {
         self.rotorL.set_position(key.chars().nth(0).unwrap());
         self.rotorC.set_position(key.chars().nth(1).unwrap());
@@ -77,7 +83,7 @@ impl Enigma {
 
 #[cfg(test)]
 mod tests {
-    use crate::{config::load_config, enigma};
+    use crate::config::load_config;
 
     use super::*;
 

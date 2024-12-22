@@ -27,14 +27,6 @@ impl Rotor {
             // Rotate the current rotor
             Rotor::rotate_string(&mut self.input);
             Rotor::rotate_string(&mut self.wiring);
-            /*
-            // Check if this rotor is at its notch
-            if self.is_at_notch() {
-                if let Some(ref mut next) = next_rotor {
-                    // Step the next rotor if this rotor is at the notch
-                    next.step(None, None);
-                }
-            } */
         }
     }
 
