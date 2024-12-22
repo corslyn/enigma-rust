@@ -38,15 +38,15 @@ impl Enigma {
 
         for character in chars {
             let mut signal = keyboard::forward(character);
-            self.rotor1.step(Some(&mut self.rotor2));
+            self.rotor3.step(None);
             signal = self.plugboard.forward(signal);
-            signal = self.rotor1.forward(signal);
-            signal = self.rotor2.forward(signal);
             signal = self.rotor3.forward(signal);
+            signal = self.rotor2.forward(signal);
+            signal = self.rotor1.forward(signal);
             signal = self.reflector.reflect(signal);
-            signal = self.rotor3.backward(signal);
-            signal = self.rotor2.backward(signal);
             signal = self.rotor1.backward(signal);
+            signal = self.rotor2.backward(signal);
+            signal = self.rotor3.backward(signal);
             signal = self.plugboard.backward(signal);
             let letter = keyboard::backward(signal);
             encoded.push(letter);
@@ -67,10 +67,11 @@ mod tests {
         let rotor1 = Rotor::new(config.rotors.I, config.notches.I);
         let rotor2 = Rotor::new(config.rotors.II, config.notches.II);
         let rotor3 = Rotor::new(config.rotors.III, config.notches.III);
-        let reflector = Reflector::new(config.reflectors.B);
-        let plugboard = Plugboard::new(vec![('A', 'R')]);
+        let reflector = Reflector::new(config.reflectors.A);
+        let plugboard = Plugboard::new(vec![('A', 'R'), ('G', 'K'), ('O', 'X')]);
         let mut enigma = Enigma::new(rotor1, rotor2, rotor3, reflector, plugboard);
         let result = enigma.encode("A".to_string());
-        assert_eq!(result, "V");
+
+        assert_eq!(result, "N");
     }
 }
