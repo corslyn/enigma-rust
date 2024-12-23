@@ -89,10 +89,19 @@ mod tests {
     fn test_encoding() {
         let config = load_config();
         let key = "ABC".to_string();
-        let rotorL = Rotor::new(config.rotors.I, config.notches.I);
-        let rotorC = Rotor::new(config.rotors.II, config.notches.II);
-        let rotorR = Rotor::new(config.rotors.III, config.notches.III);
-        let reflector = Reflector::new(config.reflectors.B);
+        let rotorL = Rotor::new(
+            config.rotors.get("I").unwrap().to_string(),
+            config.notches.get("I").unwrap().to_string(),
+        );
+        let rotorC = Rotor::new(
+            config.rotors.get("II").unwrap().to_string(),
+            config.notches.get("II").unwrap().to_string(),
+        );
+        let rotorR = Rotor::new(
+            config.rotors.get("III").unwrap().to_string(),
+            config.notches.get("III").unwrap().to_string(),
+        );
+        let reflector = Reflector::new(config.reflectors.get("B").unwrap().to_string());
         let plugboard = Plugboard::new(vec![('A', 'R'), ('G', 'K'), ('O', 'X')]);
         let mut enigma = Enigma::new(rotorL, rotorC, rotorR, reflector, plugboard);
         enigma.set_start_position(key);

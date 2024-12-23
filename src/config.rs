@@ -1,12 +1,12 @@
 use serde::Deserialize;
-use std::fs;
+use std::{collections::HashMap, fs};
 
 #[derive(Debug, Deserialize)]
 pub struct Config {
     pub misc: Misc,
-    pub reflectors: Reflectors,
-    pub rotors: Rotors,
-    pub notches: Notches,
+    pub reflectors: HashMap<String, String>,
+    pub rotors: HashMap<String, String>,
+    pub notches: HashMap<String, char>, // Each notch is a single character
 }
 #[derive(Debug, Deserialize)]
 pub struct Misc {

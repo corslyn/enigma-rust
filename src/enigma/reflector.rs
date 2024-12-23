@@ -34,7 +34,7 @@ mod tests {
     #[test]
     fn test_reflect() {
         let config = load_config();
-        let reflector_a_wiring = config.reflectors.A;
+        let reflector_a_wiring = config.reflectors.get("A").unwrap().to_string();
         let reflector_a = Reflector::new(reflector_a_wiring);
         let result = Reflector::reflect(&reflector_a, 7);
         assert_eq!(result, 23);

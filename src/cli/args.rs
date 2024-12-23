@@ -3,18 +3,23 @@ use clap::Parser;
 #[derive(Parser, Debug)]
 #[clap(author, version, about)]
 pub struct Cli {
-    /// The rotors to use (exactly 3)
-    #[clap(required = true, num_args = 3)]
+    /// Three rotor settings, e.g., "I II III"
     #[arg(short, long)]
-    pub rotors: Vec<String>,
+    pub rotors: String,
 
-    /// The text to process
-    #[clap(required = true)]
+    /// Reflector to use, e.g., "B"
+    #[arg(long)]
+    pub reflector: String,
+
+    /// Plugboard settings, e.g., "AB CD EF" (optional)
     #[arg(short, long)]
-    pub text: String,
+    pub plugboard: Option<String>,
 
-    /// The key for the encryption
-    #[clap(default_value = "AAA", last(false))]
+    /// Initial rotor positions, e.g., "A B C" (optional)
     #[arg(short, long)]
     pub key: Option<String>,
+
+    /// The text to encode or decode
+    #[arg(short, long)]
+    pub text: String,
 }

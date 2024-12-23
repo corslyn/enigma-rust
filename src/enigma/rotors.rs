@@ -71,8 +71,8 @@ mod tests {
     #[test]
     fn test_forward() {
         let config = load_config();
-        let rotor_iii_wiring = config.rotors.III;
-        let notch_iii = config.notches.III;
+        let rotor_iii_wiring = config.rotors.get("III").unwrap().to_string();
+        let notch_iii = config.notches.get("III").unwrap().to_string();
         let rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
         let result = Rotor::forward(&rotor_iii, 0);
         assert_eq!(result, 1);
@@ -81,8 +81,8 @@ mod tests {
     #[test]
     fn test_backward() {
         let config = load_config();
-        let rotor_iii_wiring = config.rotors.III;
-        let notch_iii = config.notches.III;
+        let rotor_iii_wiring = config.rotors.get("III").unwrap().to_string();
+        let notch_iii = config.notches.get("III").unwrap().to_string();
         let rotor_iii = Rotor::new(rotor_iii_wiring, notch_iii);
         let result = Rotor::backward(&rotor_iii, 1);
         assert_eq!(result, 0);
@@ -93,8 +93,8 @@ mod tests {
     #[test]
     fn test_stepping() {
         let config = load_config();
-        let rotor_iii_wiring = config.rotors.III;
-        let notch_iii = config.notches.III;
+        let rotor_iii_wiring = config.rotors.get("III").unwrap().to_string();
+        let notch_iii = config.notches.get("III").unwrap().to_string();
         let mut rotor_iii = Rotor::new(rotor_iii_wiring.clone(), notch_iii.clone());
         rotor_iii.step(None);
         assert_eq!("DFHJLCPRTXVZNYEIWGAKMUSQOB", &rotor_iii.wiring);
