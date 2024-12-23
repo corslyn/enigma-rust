@@ -3,22 +3,38 @@
 
 use clap::error::ErrorKind;
 use clap::{Error, Parser};
-use cli::args::Cli;
+use cli::args::{Cli, CliArgs, Command};
 use config::load_config;
 use enigma::plugboard::Plugboard;
 use enigma::reflector::Reflector;
 use enigma::rotors::Rotor;
 use enigma::Enigma;
+use server::server::run;
 
+mod server {
+    pub mod server;
+}
 mod config;
 mod enigma;
 mod cli {
     pub mod args;
 }
-fn main() {
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
     let args = Cli::parse();
 
+    match args.command {
+        Command::Cli(command) => {
+            encode_cli(command);
+            Ok(())
+        }
+        Command::Server(server_args) => return run(server_args).await,
+    }
+}
+
+fn encode_cli(args: CliArgs) {
     let rotors: Vec<&str> = args.rotors.split_whitespace().collect();
+
     if rotors.len() != 3 {
         Error::new(ErrorKind::ValueValidation).exit();
     }

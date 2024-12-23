@@ -6,6 +6,7 @@ authors = ["corslyn"]
 description = "An implementation of the Enigma Machine in Rust"
 
 [dependencies]
+actix-web = "4.9.0"
 clap = { version = "4.5.23", features = ["derive"] }
 serde = { version = "1.0.216", features = ["derive"] }
 toml = "0.8.19"
