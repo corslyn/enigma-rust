@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enigma Machine</title>
+    <script src="js/main.js"></script>
+</head>
+
+<body>
+    <form method="post" id="form">
+        <textarea name="plaintext" id="plaintext" style="resize: none; width: 99%; "></textarea>
+        <br>
+        <label for="reflectors">Reflector</label>
+        <select name="reflectors" id="reflectors">
+            <option value="A">A</option>
+            <option value="B" selected>B</option>
+            <option value="C">C</option>
+        </select>
+        <div class="rotors">
+            <label for="rotorL">Left Rotor</label>
+
+            <select name="rotorL" id="rotorL">
+                <option value="I">I</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="IV">IV</option>
+                <option value="V">V</option>
+
+            </select>
+            <label for="rotorC">Center Rotor</label>
+
+            <select name="rotorC" id="rotorC">
+                <option value="I">I</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="IV">IV</option>
+                <option value="V">V</option>
+
+            </select>
+            <label for="rotorR">Right Rotor</label>
+
+            <select name="rotorR" id="rotorR">
+                <option value="I">I</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="IV">IV</option>
+                <option value="V">V</option>
+
+            </select>
+        </div>
+        <div class="initial_position">
+            <label for="initial_position">Initial Rotors Positions</label>
+            <input id="initial_position" type="text" value="AAA">
+        </div>
+        <label for="plugboard">Plugboard</label>
+        <input id="plugboard" type="text">
+
+        <button type="submit">Encode</button>
+    </form>
+</body>
+
+</html>

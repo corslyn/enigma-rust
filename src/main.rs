@@ -32,6 +32,7 @@ async fn main() -> std::io::Result<()> {
     }
 }
 
+/// Prints the encoded text in stdout
 fn encode_cli(args: CliArgs) {
     let rotors: Vec<&str> = args.rotors.split_whitespace().collect();
 

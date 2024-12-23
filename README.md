@@ -24,16 +24,16 @@ $ cargo run -- -h
 
 An implementation of the Enigma Machine in Rust
 
-Usage: enigma-rust [OPTIONS] --rotors <ROTORS> --reflector <REFLECTOR> --text <TEXT>
+Usage: enigma-rust <COMMAND>
+
+Commands:
+  cli     Use the cli Enigma machine
+  server  Start the web server
+  help    Print this message or the help of the given subcommand(s)
 
 Options:
-  -r, --rotors <ROTORS>        Three rotor settings, e.g., "I II III"
-      --reflector <REFLECTOR>  Reflector to use, e.g., "B"
-  -p, --plugboard <PLUGBOARD>  Plugboard settings, e.g., "AB CD EF" (optional)
-  -k, --key <KEY>              Initial rotor positions, e.g., "A B C" (optional)
-  -t, --text <TEXT>            The text to encode or decode
-  -h, --help                   Print help
-  -V, --version                Print version
+  -h, --help     Print help
+  -V, --version  Print version
 ```
 
 
