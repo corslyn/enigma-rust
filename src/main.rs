@@ -32,7 +32,7 @@ fn main() {
                     Error::raw(
                         ErrorKind::ValueValidation,
                         format!(
-                            "Invalid plugboard pair '{}'. Each pair must have exactly 2 letters.",
+                            "Invalid plugboard pair '{}'. Each pair must have exactly 2 letters.\n",
                             pair
                         ),
                     )
@@ -49,18 +49,36 @@ fn main() {
 
     let config = load_config();
     let rotorL = Rotor::new(
-        config.rotors.get(rotors[0]).unwrap().to_string(),
+        config
+            .rotors
+            .get(rotors[0])
+            .expect("Invalid rotor")
+            .to_string(),
         config.notches.get(rotors[0]).unwrap().to_string(),
     );
     let rotorC = Rotor::new(
-        config.rotors.get(rotors[1]).unwrap().to_string(),
+        config
+            .rotors
+            .get(rotors[1])
+            .expect("Invalid rotor")
+            .to_string(),
         config.notches.get(rotors[1]).unwrap().to_string(),
     );
     let rotorR = Rotor::new(
-        config.rotors.get(rotors[2]).unwrap().to_string(),
+        config
+            .rotors
+            .get(rotors[2])
+            .expect("Invalid rotor")
+            .to_string(),
         config.notches.get(rotors[2]).unwrap().to_string(),
     );
-    let reflector = Reflector::new(config.reflectors.get(&reflector).unwrap().to_string());
+    let reflector = Reflector::new(
+        config
+            .reflectors
+            .get(&reflector)
+            .expect("Invalid reflector")
+            .to_string(),
+    );
     let plugboard = Plugboard::new(plugboard_settings);
     let mut enigma = Enigma::new(rotorL, rotorC, rotorR, reflector, plugboard);
     enigma.set_start_position(rotor_positions);
