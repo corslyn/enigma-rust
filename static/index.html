@@ -5,15 +5,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Enigma Machine</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="js/main.js"></script>
+
 </head>
 
 <body>
-    <form method="post" id="form">
+    <form id="form">
         <textarea name="plaintext" id="plaintext" style="resize: none; width: 99%; "></textarea>
         <br>
-        <label for="reflectors">Reflector</label>
-        <select name="reflectors" id="reflectors">
+        <label for="reflector">Reflector</label>
+        <select name="reflector" id="reflector">
             <option value="A">A</option>
             <option value="B" selected>B</option>
             <option value="C">C</option>
@@ -52,12 +54,12 @@
         </div>
         <div class="initial_position">
             <label for="initial_position">Initial Rotors Positions</label>
-            <input id="initial_position" type="text" value="AAA">
+            <input name="initial_position" id="initial_position" type="text" value="AAA">
         </div>
         <label for="plugboard">Plugboard</label>
-        <input id="plugboard" type="text">
+        <input name="plugboard" id="plugboard" type="text">
 
-        <button type="submit">Encode</button>
+        <input id="submit" value="Encode" type="button">
     </form>
 </body>
 
